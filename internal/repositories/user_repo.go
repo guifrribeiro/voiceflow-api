@@ -24,3 +24,29 @@ func (repo *UserRepository) CreateUser(user *models.User) error {
 
 	return nil
 }
+
+func (repo *UserRepository) GetUsers() ([]models.User, error) {
+	query := "SELECT * FROM voiceflow.users"
+	rows, err := repo.DB.Query(query)
+
+	if err != nil {
+		return nil, errors.New("erro ao buscar usuários: " + err.Error())
+	}
+
+	defer rows.Close()
+
+	var users []models.User
+
+	for rows.Next() {
+		var user models.User
+		err := rows.Scan(&user.Id, &user.Name, &user.Email, &user.Password, &user.CreatedAt)
+
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, user)
+	}
+
+	return users, nil
+}

@@ -15,8 +15,8 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 }
 
 func (repo *UserRepository) CreateUser(user *models.User) error {
-	query := "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id"
-	err := repo.DB.QueryRow(query, user.Name, user.Email).Scan(&user.Id)
+	query := "INSERT INTO voiceflow.users (name, email, password) VALUES ($1, $2, $3) RETURNING id"
+	err := repo.DB.QueryRow(query, user.Name, user.Email, user.Password).Scan(&user.Id)
 
 	if err != nil {
 		return errors.New("Erro ao cadastrar usuário: " + err.Error())
